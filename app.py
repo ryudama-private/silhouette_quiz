@@ -1,4 +1,2 @@
 import streamlit as st
-
-
-st.title("だーれだ")
+st.switch_page("pages/top.py")
