@@ -50,11 +50,18 @@ quiz_image_name = st.session_state.get("quiz_image_name")
 quiz_original_bytes = st.session_state.get("quiz_original_bytes")
 
 if quiz_image_bytes:
+    # シルエットと元画像の表示の切り替え
     display_bytes = quiz_image_bytes
     if st.session_state.quiz_revealed and quiz_original_bytes:
         display_bytes = quiz_original_bytes
-    st.image(display_bytes, use_container_width=True)
+    
+    #画像の配置
+    col1, col2 = st.columns(2)
+    with col1:
+        with st.container(border=True):
+            st.image(display_bytes, use_container_width=True)
 
+    #インプットフォーム
     if not st.session_state.quiz_revealed:
         user_answer = st.text_input("このシルエットの名前を入力")
         if st.button("回答する"):
