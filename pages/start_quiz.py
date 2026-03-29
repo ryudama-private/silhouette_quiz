@@ -100,7 +100,7 @@ if quiz_image_bytes and st.button("保存済みクイズ画像を削除"):
     st.session_state.quiz_deleted = True
     st.rerun()
 
-if START_AUDIO_PATH.exists() and st.session_state.quiz_revealed == False:
+if quiz_image_bytes and START_AUDIO_PATH.exists() and st.session_state.quiz_revealed == False:
     play_hidden_wav(START_AUDIO_PATH, key="start-audio")
 
 if (
