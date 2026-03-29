@@ -1,9 +1,12 @@
 import base64
+from pathlib import Path
 import streamlit as st
 from streamlit_js_eval import streamlit_js_eval
 
 st.set_page_config(page_title="問題開始")
 st.title("問題開始")
+
+START_AUDIO_PATH = Path(__file__).resolve().parents[1] / "quiz_data" / "だーれだ.wav"
 
 if "quiz_image_bytes" not in st.session_state:
     st.session_state.quiz_image_bytes = None
@@ -70,6 +73,9 @@ if quiz_image_bytes and st.button("保存済みクイズ画像を削除"):
     st.session_state.quiz_revealed = False
     st.session_state.quiz_deleted = True
     st.rerun()
+
+if START_AUDIO_PATH.exists() and st.session_state.quiz_revealed == False:
+    st.audio(START_AUDIO_PATH.read_bytes(), format="audio/wav", autoplay=True)
 
 with st.sidebar:
     st.header("メニュー")
