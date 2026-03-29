@@ -14,6 +14,10 @@ if "quiz_image_bytes" not in st.session_state:
     st.session_state.quiz_image_bytes = None
 if "quiz_image_name" not in st.session_state:
     st.session_state.quiz_image_name = None
+if "quiz_original_bytes" not in st.session_state:
+    st.session_state.quiz_original_bytes = None
+if "quiz_revealed" not in st.session_state:
+    st.session_state.quiz_revealed = False
 
 uploaded = st.file_uploader(
     "画像をアップロードしてください",
@@ -77,9 +81,12 @@ if uploaded:
     if st.button("この画像をクイズに設定"):
         st.session_state.quiz_image_bytes = download_bytes
         st.session_state.quiz_image_name = safe_name
+        st.session_state.quiz_original_bytes = input_bytes
+        st.session_state.quiz_revealed = False
         st.success("シルエット画像をクイズに設定しました。問題開始ページで確認できます。")
 
         image_b64 = base64.b64encode(download_bytes).decode("utf-8")
+        original_b64 = base64.b64encode(input_bytes).decode("utf-8")
         streamlit_js_eval(
             js_expressions=f'localStorage.setItem("silhouette_quiz_image_b64", "{image_b64}")',
             key="set_quiz_image_b64",
@@ -87,6 +94,10 @@ if uploaded:
         streamlit_js_eval(
             js_expressions=f'localStorage.setItem("silhouette_quiz_name", "{safe_name}")',
             key="set_quiz_name",
+        )
+        streamlit_js_eval(
+            js_expressions=f'localStorage.setItem("silhouette_quiz_original_b64", "{original_b64}")',
+            key="set_quiz_original_b64",
         )
 
 with st.sidebar:
