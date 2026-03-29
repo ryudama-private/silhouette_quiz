@@ -16,6 +16,13 @@ uploaded = st.file_uploader(
 if uploaded:
     #画像のバイト列に変換したのを格納
     input_bytes = uploaded.getvalue()
+    
+    # 保存名の入力フォーム（拡張子なし。「\/:*?"<>|」は使用できません）
+    default_base_name = f"{Path(uploaded.name).stem}_removed_bg"
+    masked_name_input = st.text_input(
+        "シルエット画像のファイル名（拡張子なし）",
+        value=default_base_name
+    )
 
     # rembgで背景除去
     output_bytes = remove(input_bytes)  #rembgによって背景除去された画像のバイト列
@@ -44,7 +51,7 @@ if uploaded:
             st.image(input_bytes, use_container_width=True)
     with col2:
         with st.container(border=True):
-            st.subheader("背景削除後")
+            st.subheader("シルエット画像")
             st.image(result_image, use_container_width=True)
 
     # ダウンロード用
@@ -52,8 +59,13 @@ if uploaded:
     result_image.save(download_bytes, format="PNG")
     download_bytes = download_bytes.getvalue()
     
-    base_name = Path(uploaded.name).stem
-    download_name = f"{base_name}_removed_bg.png"
+    # ファイル名に使えない文字を除去
+    invalid_chars = '\\/:*?"<>|'
+    safe_name = "".join(ch for ch in masked_name_input.strip() if ch not in invalid_chars)
+    if not safe_name:
+        safe_name = default_base_name
+
+    download_name = f"{safe_name}.png"
 
     st.download_button(
         label="背景削除画像をダウンロード",
