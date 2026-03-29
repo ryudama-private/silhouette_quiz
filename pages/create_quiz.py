@@ -23,6 +23,9 @@ uploaded = st.file_uploader(
     "画像をアップロードしてください",
     type=["png", "jpg", "jpeg", "webp"]
 )
+st.caption("AIが認識しやすいよう、できるだけ鮮明で、対象が1つだけはっきり写っている画像をおすすめします。")
+st.caption("参考例: illustAC の画像ページです。画像の利用条件やライセンスは必ずご自身でご確認ください。")
+st.markdown("[画像の例はこちら（illustAC）](https://www.ac-illust.com/main/detail.php?id=26939896&word=%E3%81%8B%E3%82%8F%E3%81%84%E3%81%84%E3%80%80%E6%9F%B4%E7%8A%AC%E3%80%80%E5%BE%85%E3%81%A6%EF%BC%88%E6%AD%A3%E9%9D%A2%EF%BC%89)")
 
 if uploaded:
     #画像のバイト列に変換したのを格納
