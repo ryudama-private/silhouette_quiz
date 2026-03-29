@@ -10,7 +10,6 @@ st.title("問題開始")
 START_AUDIO_PATH = Path(__file__).resolve().parents[1] / "quiz_data" / "だーれだ.wav"
 CORRECT_AUDIO_PATH = Path(__file__).resolve().parents[1] / "quiz_data" / "正解.wav"
 
-
 def play_hidden_wav(audio_path: Path, key: str) -> None:
     audio_b64 = base64.b64encode(audio_path.read_bytes()).decode("utf-8")
     components.html(
