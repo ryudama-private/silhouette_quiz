@@ -24,10 +24,10 @@ if uploaded:
     #画像のバイト列に変換したのを格納
     input_bytes = uploaded.getvalue()
     
-    # 保存名の入力フォーム（拡張子なし。「\/:*?"<>|」は使用できません）
-    default_base_name = f"{Path(uploaded.name).stem}_removed_bg"
+    # 保存名の入力フォーム
+    default_base_name = f"{Path(uploaded.name).stem}"
     masked_name_input = st.text_input(
-        "シルエット画像のファイル名（拡張子なし）",
+        "シルエット画像のファイル名（拡張子なし。「\/:*?\"<>|」は使用できません）",
         value=default_base_name
     )
 
@@ -61,7 +61,7 @@ if uploaded:
             st.subheader("シルエット画像")
             st.image(result_image, use_container_width=True)
 
-    # ダウンロード用
+    # クイズ保存用（PNGバイト列化）
     download_bytes = io.BytesIO()
     result_image.save(download_bytes, format="PNG")
     download_bytes = download_bytes.getvalue()
@@ -74,16 +74,11 @@ if uploaded:
 
     download_name = f"{safe_name}.png"
 
-    st.download_button(
-        label="背景削除画像をダウンロード",
-        data=download_bytes,
-        file_name=download_name,
-        mime="image/png",
-    )
-
     if st.button("この画像をクイズに設定"):
         st.session_state.quiz_image_bytes = download_bytes
         st.session_state.quiz_image_name = safe_name
+        st.success("シルエット画像をクイズに設定しました。問題開始ページで確認できます。")
+
         image_b64 = base64.b64encode(download_bytes).decode("utf-8")
         streamlit_js_eval(
             js_expressions=f'localStorage.setItem("silhouette_quiz_image_b64", "{image_b64}")',
@@ -93,7 +88,6 @@ if uploaded:
             js_expressions=f'localStorage.setItem("silhouette_quiz_name", "{safe_name}")',
             key="set_quiz_name",
         )
-        st.success("シルエット画像をクイズに設定しました。問題開始ページで確認できます。")
 
 with st.sidebar:
     st.header("メニュー")

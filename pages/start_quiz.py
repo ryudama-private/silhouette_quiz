@@ -41,11 +41,17 @@ quiz_image_name = st.session_state.get("quiz_image_name")
 if quiz_image_bytes:
     st.subheader("シルエットクイズ")
     st.image(quiz_image_bytes, use_container_width=True)
-    st.caption(f"画像名: {quiz_image_name}")
+
+    user_answer = st.text_input("このシルエットの名前を入力")
+    if st.button("回答する"):
+        if user_answer.strip().lower() == (quiz_image_name or "").strip().lower():
+            st.success("正解です！")
+        else:
+            st.error("不正解です")
 else:
     st.info("まだクイズ画像が設定されていません。問題作成ページで「この画像をクイズに設定」を押してください。")
 
-if st.button("保存済みクイズ画像を削除"):
+if quiz_image_bytes and st.button("保存済みクイズ画像を削除"):
     st.session_state.quiz_image_bytes = None
     st.session_state.quiz_image_name = None
     st.session_state.quiz_deleted = True
