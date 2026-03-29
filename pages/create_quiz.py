@@ -1,12 +1,19 @@
 import io
+import base64
 from pathlib import Path
 import streamlit as st
 from PIL import Image
 import numpy as np
 from rembg import remove
+from streamlit_js_eval import streamlit_js_eval
 
 st.set_page_config(page_title="問題作成")
 st.title("問題作成")
+
+if "quiz_image_bytes" not in st.session_state:
+    st.session_state.quiz_image_bytes = None
+if "quiz_image_name" not in st.session_state:
+    st.session_state.quiz_image_name = None
 
 uploaded = st.file_uploader(
     "画像をアップロードしてください",
@@ -16,6 +23,13 @@ uploaded = st.file_uploader(
 if uploaded:
     #画像のバイト列に変換したのを格納
     input_bytes = uploaded.getvalue()
+    
+    # 保存名の入力フォーム
+    default_base_name = f"{Path(uploaded.name).stem}"
+    masked_name_input = st.text_input(
+        "シルエット画像のファイル名（拡張子なし。「\/:*?\"<>|」は使用できません）",
+        value=default_base_name
+    )
 
     # rembgで背景除去
     output_bytes = remove(input_bytes)  #rembgによって背景除去された画像のバイト列
@@ -44,23 +58,36 @@ if uploaded:
             st.image(input_bytes, use_container_width=True)
     with col2:
         with st.container(border=True):
-            st.subheader("背景削除後")
+            st.subheader("シルエット画像")
             st.image(result_image, use_container_width=True)
 
-    # ダウンロード用
+    # クイズ保存用（PNGバイト列化）
     download_bytes = io.BytesIO()
     result_image.save(download_bytes, format="PNG")
     download_bytes = download_bytes.getvalue()
     
-    base_name = Path(uploaded.name).stem
-    download_name = f"{base_name}_removed_bg.png"
+    # ファイル名に使えない文字を除去
+    invalid_chars = '\\/:*?"<>|'
+    safe_name = "".join(ch for ch in masked_name_input.strip() if ch not in invalid_chars)
+    if not safe_name:
+        safe_name = default_base_name
 
-    st.download_button(
-        label="背景削除画像をダウンロード",
-        data=download_bytes,
-        file_name=download_name,
-        mime="image/png",
-    )
+    download_name = f"{safe_name}.png"
+
+    if st.button("この画像をクイズに設定"):
+        st.session_state.quiz_image_bytes = download_bytes
+        st.session_state.quiz_image_name = safe_name
+        st.success("シルエット画像をクイズに設定しました。問題開始ページで確認できます。")
+
+        image_b64 = base64.b64encode(download_bytes).decode("utf-8")
+        streamlit_js_eval(
+            js_expressions=f'localStorage.setItem("silhouette_quiz_image_b64", "{image_b64}")',
+            key="set_quiz_image_b64",
+        )
+        streamlit_js_eval(
+            js_expressions=f'localStorage.setItem("silhouette_quiz_name", "{safe_name}")',
+            key="set_quiz_name",
+        )
 
 with st.sidebar:
     st.header("メニュー")
