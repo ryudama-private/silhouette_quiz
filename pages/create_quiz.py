@@ -8,6 +8,11 @@ from rembg import remove
 st.set_page_config(page_title="問題作成")
 st.title("問題作成")
 
+if "quiz_image_bytes" not in st.session_state:
+    st.session_state.quiz_image_bytes = None
+if "quiz_image_name" not in st.session_state:
+    st.session_state.quiz_image_name = None
+
 uploaded = st.file_uploader(
     "画像をアップロードしてください",
     type=["png", "jpg", "jpeg", "webp"]
@@ -73,6 +78,11 @@ if uploaded:
         file_name=download_name,
         mime="image/png",
     )
+
+    if st.button("この画像をクイズに設定"):
+        st.session_state.quiz_image_bytes = download_bytes
+        st.session_state.quiz_image_name = safe_name
+        st.success("シルエット画像をクイズに設定しました。問題開始ページで確認できます。")
 
 with st.sidebar:
     st.header("メニュー")
