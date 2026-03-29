@@ -59,10 +59,7 @@ if quiz_image_bytes:
     if st.button("回答する"):
         if user_answer.strip().lower() == (quiz_image_name or "").strip().lower():
             st.session_state.quiz_revealed = True
-            st.success("正解です！")
             st.rerun()
-        else:
-            st.error("不正解です")
 else:
     st.info("まだクイズ画像が設定されていません。問題作成ページで「この画像をクイズに設定」を押してください。")
 
