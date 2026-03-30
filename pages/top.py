@@ -10,12 +10,7 @@ st.subheader("使い方")
 st.write("1. 問題作成ページで画像をアップロードしてクイズを設定します。")
 st.write("2. 問題開始ページでシルエットを見て答えを入力します。")
 
-col1, col2 = st.columns(2)
-with col1:
-    st.page_link("pages/create_quiz.py", label="問題作成へ")
-with col2:
-    st.page_link("pages/start_quiz.py", label="問題開始へ")
-    
+st.video("assets/チュートリアル.mp4")
     
 st.subheader("免責事項")
 
