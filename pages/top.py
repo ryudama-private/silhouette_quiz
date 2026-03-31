@@ -10,7 +10,11 @@ st.subheader("使い方")
 st.write("1. 問題作成ページで画像をアップロードしてクイズを設定します。")
 st.write("2. 問題開始ページでシルエットを見て答えを入力します。")
 
-st.video("assets/チュートリアル.mp4")
+st.video("assets/チュートリアル_2026-3-29.mp4")
+
+st.subheader("更新履歴")
+with st.expander("更新内容を見る", expanded=True):
+    st.write("2026-03-29 : リリース")
     
 st.subheader("免責事項")
 
