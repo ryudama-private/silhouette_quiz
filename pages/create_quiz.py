@@ -1,5 +1,4 @@
 import io
-import time
 import base64
 import json
 import streamlit as st
@@ -121,16 +120,13 @@ if uploaded:
             st.session_state.quiz_image_name = answer_name
             st.session_state.quiz_original_bytes = input_bytes
             st.session_state.quiz_revealed = False
-            success_msg = st.empty()
-            success_msg.success("クイズを追加しました。問題開始ページで確認できます。")
-            time.sleep(10)
-            success_msg.empty()
 
             items_json = json.dumps(st.session_state.quiz_items, ensure_ascii=False)
             streamlit_js_eval(
                 js_expressions=f'localStorage.setItem("silhouette_quiz_items_json", {json.dumps(items_json, ensure_ascii=False)}); localStorage.removeItem("silhouette_quiz_image_b64"); localStorage.removeItem("silhouette_quiz_name"); localStorage.removeItem("silhouette_quiz_original_b64"); true;',
                 key="set_quiz_items_json",
             )
+            st.success("クイズを追加しました。問題開始ページで確認できます。")
 
 with st.sidebar:
     st.header("メニュー")
