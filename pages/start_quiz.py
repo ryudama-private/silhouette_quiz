@@ -83,6 +83,9 @@ if quiz_items:
                 st.error("不正解です。もう一度挑戦してください。")
     else:
         st.success(f"正解です: {quiz_image_name}")
+        if st.button("もう一度挑戦"):
+            st.session_state.quiz_revealed = False
+            st.rerun()
 
     if st.button("選択中の問題を削除"):
         del st.session_state.quiz_items[st.session_state.quiz_current_index]
