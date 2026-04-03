@@ -1,4 +1,5 @@
 import io
+import time
 import base64
 import json
 import streamlit as st
@@ -120,7 +121,10 @@ if uploaded:
             st.session_state.quiz_image_name = answer_name
             st.session_state.quiz_original_bytes = input_bytes
             st.session_state.quiz_revealed = False
-            st.success("クイズを追加しました。問題開始ページで確認できます。")
+            success_msg = st.empty()
+            success_msg.success("クイズを追加しました。問題開始ページで確認できます。")
+            time.sleep(10)
+            success_msg.empty()
 
             items_json = json.dumps(st.session_state.quiz_items, ensure_ascii=False)
             streamlit_js_eval(
